@@ -47,7 +47,6 @@ class NetworkManager {
                 completion(nil, error)
             }
         }
-        
         task.resume()
     }
 }

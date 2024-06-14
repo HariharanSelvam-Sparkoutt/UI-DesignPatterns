@@ -53,12 +53,18 @@ extension ViewController: UITableViewDataSource {
         cell.priceLabel.text = "Price: $\(item.price)"
         cell.ratingLabel.text = "\(item.rating)"
         
-        if let url = URL(string: item.image), let data = try? Data(contentsOf: url) {
-            if let image = UIImage(data: data) {
-                cell.itemImageView.contentMode = .scaleToFill
-                cell.itemImageView.image = image
+        // Perform image loading asynchronously
+            DispatchQueue.global().async {
+                if let url = URL(string: item.image), let data = try? Data(contentsOf: url) {
+                    if let image = UIImage(data: data) {
+                        // Switch back to the main thread to update UI
+                        DispatchQueue.main.async {
+                            cell.itemImageView.contentMode = .scaleToFill
+                            cell.itemImageView.image = image
+                        }
+                    }
+                }
             }
-        }
         print("Configuring cell for item at index:", indexPath.row)
         return cell
     }
